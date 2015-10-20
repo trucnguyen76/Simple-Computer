@@ -5,6 +5,7 @@
 #include <QMap>
 #include <QLineEdit>
 #include <QDebug>
+#include <QMessageBox>
 
 namespace Ui {
 class MainWindow;
@@ -35,7 +36,7 @@ public:
     void updateACDisplay();
     void updatePCDisplay();
     void updateIRDisplay();
-    void decision(int command);
+    void step(int command);
 
 private:
     Ui::MainWindow *ui;
@@ -52,6 +53,7 @@ private slots:
     void editMemory();
     void editInput();
 
+    void on_pushButton_2_clicked();
 };
 
 

@@ -19,6 +19,9 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(inputCell, SIGNAL(editingFinished()), this, SLOT(editInput()));
     }
 
+    currentInputKey = 0;
+    currentOutputKey = 0;
+
 }
 
 MainWindow::~MainWindow()
@@ -55,19 +58,19 @@ void MainWindow::setUpIO()
     int y = 25;
     int key;
 
-    for(key = 1; key <= 10; key++ )
+    for(key = 0; key < 10; key++ )
     {
         inputMap.insert(key,((QLineEdit*)(ui->InputGroup->childAt(x,y))));
-        inputMap[key]->setText("01");
+//        inputMap[key]->setText("01");
         inputMap[key]->setValidator(new QIntValidator(-999, 999, this));
         y += 20;
     }
 
     y = 25;
-    for(key = 1; key <= 10; key++ )
+    for(key = 0; key < 10; key++ )
     {
         outputMap.insert(key,((QLineEdit*)(ui->OutputGroup->childAt(x,y))));
-        outputMap[key]->setText("01");
+//        outputMap[key]->setText("01");
         y += 20;
 
     }
@@ -132,29 +135,36 @@ void MainWindow::editInput()
     }
 }
 
-void MainWindow::decision(int command)
+void MainWindow::step(int command)
 {
     int code;
     int memory;
 
     code = command / 100;
     memory = command % 100;
+qDebug() << "Before switch";
+qDebug() << "Command: " << command;
+qDebug() << "Code: " << code;
 
     switch(code)
     {
         case INP:
+qDebug() << "In INP";
+qDebug() << "current input key: " << currentInputKey;
+qDebug() << "text" << inputMap[currentInputKey]->displayText();
             memoryMap[memory]->setText(inputMap[currentInputKey]->displayText());
+qDebug() << "After setText";
             currentInputKey++;
             pCounter++;
             //Change display of PC on GUI
-            updatePCDisplay();
+//            updatePCDisplay();
             break;
         case OUT:
             outputMap[currentOutputKey]->setText(memoryMap[memory]->displayText());
             currentOutputKey++;
             pCounter++;
             //Change display of PC on GUI
-            updatePCDisplay();
+//            updatePCDisplay();
             break;
         case ADD:
             accumulator += memoryMap[memory]->displayText().toInt();
@@ -162,7 +172,7 @@ void MainWindow::decision(int command)
             updateACDisplay();
             pCounter++;
             //Change display of PC on GUI
-            updatePCDisplay();
+//            updatePCDisplay();
             break;
         case SUB:
             accumulator -= memoryMap[memory]->displayText().toInt();
@@ -170,7 +180,7 @@ void MainWindow::decision(int command)
             updateACDisplay();
             pCounter++;
             //Change display of PC on GUI
-            updatePCDisplay();
+//            updatePCDisplay();
             break;
         case LDA:
             accumulator = memoryMap[memory]->displayText().toInt();
@@ -178,19 +188,19 @@ void MainWindow::decision(int command)
             //Change display of AC on GUI
             updateACDisplay();
             //Change display of PC on GUI
-            updatePCDisplay();
+//            updatePCDisplay();
             break;
         case STA:
             memoryMap[memory]->setText(QString::number(accumulator % 1000));
             pCounter++;
             //Change display of PC on GUI
-            updatePCDisplay();
+//            updatePCDisplay();
             break;
         case JMP:
             memoryMap[99]->setText(QString::number(pCounter));
             pCounter = memory;
             //Change display of PC on GUI
-            updatePCDisplay();
+//            updatePCDisplay();
             break;
         case TAC:
             if(accumulator < 0)
@@ -202,7 +212,7 @@ void MainWindow::decision(int command)
                 pCounter++;
             }
             //Change display of PC on GUI
-            updatePCDisplay();
+//            updatePCDisplay();
             break;
         case SHF:
             int x, y;
@@ -213,25 +223,49 @@ void MainWindow::decision(int command)
             {
                 accumulator *= 10;
             }
+            if(accumulator > 9999)
+            {
+                accumulator = accumulator % 10000;
+            }
             for(int i = 0; i < y; i++)
             {
                 accumulator /= 10;
             }
             pCounter++;
             //Change display of PC on GUI
-            updatePCDisplay();
+//            updatePCDisplay();
             //Change display of AC on GUI
             updateACDisplay();
             break;
         case HLT:
             qDebug() << "HALT";
+            QMessageBox::information(this, "Info", "Program terminate normally");
             break;
         default:
             qDebug() << "Not a valid command";
 
     }
+qDebug() << "After switch";
     //Update Intstruction Register
-    updateIRDisplay();
+    iRegister = memoryMap[pCounter]->displayText().toInt();
+qDebug() << "After assigning";
+    //Special case when do mandatory jump
+    if(code != 6)
+    {
+        updateIRDisplay();
+    }
+    else
+    {
+        int IR = memoryMap[pCounter]->displayText().toInt();
+
+        ui->IR1->setText(QString::number (IR / 100));
+        ui->IR2->setText(QString::number((IR / 10)%10));
+        ui->IR3->setText(QString::number (IR % 10));
+    }
+qDebug() << "After update IR display";
+    updatePCDisplay();
+qDebug() << "End step";
+
 }
 
 void MainWindow::updateACDisplay()
@@ -244,8 +278,9 @@ void MainWindow::updateACDisplay()
 
 void MainWindow::updatePCDisplay()
 {
-    ui->PC1->setText(QString::number (pCounter / 10));
-    ui->PC2->setText(QString::number (pCounter % 10));
+    ui->PC1->setText(QString::number (pCounter / 100));
+    ui->PC2->setText(QString::number((pCounter / 10)%10));
+    ui->PC3->setText(QString::number (pCounter % 10));
 }
 
 void MainWindow::updateIRDisplay()
@@ -260,3 +295,21 @@ void MainWindow::updateIRDisplay()
 
 
 
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    pCounter =  ui->PC1->displayText().toInt() * 100 +
+                ui->PC2->displayText().toInt() * 10 +
+                ui->PC3->displayText().toInt();
+qDebug() << "pCounter" << pCounter;
+qDebug() << "Start Step";
+    iRegister = memoryMap[pCounter]->displayText().toInt();
+    if(iRegister == 0)
+    {
+        QMessageBox::information(this, "Error", "Reach empty memory card");
+    }
+    else
+    {
+        step(iRegister);
+    }
+}

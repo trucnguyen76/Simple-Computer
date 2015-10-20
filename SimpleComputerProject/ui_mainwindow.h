@@ -47,15 +47,16 @@ public:
     QLineEdit *IR1;
     QLineEdit *IR2;
     QLineEdit *IR3;
-    QGroupBox *PCGroup;
-    QLineEdit *PC1;
-    QLineEdit *PC2;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
     QPushButton *pushButton;
     QPushButton *pushButton_2;
     QPushButton *clearCPUBut;
     QPushButton *clearAllBut;
+    QGroupBox *PCGroup;
+    QLineEdit *PC1;
+    QLineEdit *PC2;
+    QLineEdit *PC3;
     QGroupBox *InputGroup;
     QLineEdit *IC1;
     QLineEdit *IC2;
@@ -354,7 +355,7 @@ public:
         AC4->setReadOnly(true);
         IRGroup = new QGroupBox(CPUGroup);
         IRGroup->setObjectName(QStringLiteral("IRGroup"));
-        IRGroup->setGeometry(QRect(200, 10, 91, 51));
+        IRGroup->setGeometry(QRect(340, 10, 91, 51));
         IR1 = new QLineEdit(IRGroup);
         IR1->setObjectName(QStringLiteral("IR1"));
         IR1->setGeometry(QRect(10, 20, 25, 25));
@@ -370,9 +371,37 @@ public:
         IR3->setGeometry(QRect(60, 20, 25, 25));
         IR3->setInputMethodHints(Qt::ImhNone);
         IR3->setReadOnly(true);
+        layoutWidget = new QWidget(CPUGroup);
+        layoutWidget->setObjectName(QStringLiteral("layoutWidget"));
+        layoutWidget->setGeometry(QRect(90, 70, 320, 25));
+        horizontalLayout = new QHBoxLayout(layoutWidget);
+        horizontalLayout->setSpacing(6);
+        horizontalLayout->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        pushButton = new QPushButton(layoutWidget);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+
+        horizontalLayout->addWidget(pushButton);
+
+        pushButton_2 = new QPushButton(layoutWidget);
+        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+
+        horizontalLayout->addWidget(pushButton_2);
+
+        clearCPUBut = new QPushButton(layoutWidget);
+        clearCPUBut->setObjectName(QStringLiteral("clearCPUBut"));
+
+        horizontalLayout->addWidget(clearCPUBut);
+
+        clearAllBut = new QPushButton(layoutWidget);
+        clearAllBut->setObjectName(QStringLiteral("clearAllBut"));
+
+        horizontalLayout->addWidget(clearAllBut);
+
         PCGroup = new QGroupBox(CPUGroup);
         PCGroup->setObjectName(QStringLiteral("PCGroup"));
-        PCGroup->setGeometry(QRect(350, 10, 71, 51));
+        PCGroup->setGeometry(QRect(200, 10, 101, 51));
         PC1 = new QLineEdit(PCGroup);
         PC1->setObjectName(QStringLiteral("PC1"));
         PC1->setGeometry(QRect(10, 20, 25, 25));
@@ -383,34 +412,11 @@ public:
         PC2->setGeometry(QRect(35, 20, 25, 25));
         PC2->setInputMethodHints(Qt::ImhNone);
         PC2->setReadOnly(false);
-        widget = new QWidget(CPUGroup);
-        widget->setObjectName(QStringLiteral("widget"));
-        widget->setGeometry(QRect(90, 70, 320, 25));
-        horizontalLayout = new QHBoxLayout(widget);
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        pushButton = new QPushButton(widget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
-
-        horizontalLayout->addWidget(pushButton);
-
-        pushButton_2 = new QPushButton(widget);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
-
-        horizontalLayout->addWidget(pushButton_2);
-
-        clearCPUBut = new QPushButton(widget);
-        clearCPUBut->setObjectName(QStringLiteral("clearCPUBut"));
-
-        horizontalLayout->addWidget(clearCPUBut);
-
-        clearAllBut = new QPushButton(widget);
-        clearAllBut->setObjectName(QStringLiteral("clearAllBut"));
-
-        horizontalLayout->addWidget(clearAllBut);
-
+        PC3 = new QLineEdit(PCGroup);
+        PC3->setObjectName(QStringLiteral("PC3"));
+        PC3->setGeometry(QRect(60, 20, 25, 25));
+        PC3->setInputMethodHints(Qt::ImhNone);
+        PC3->setReadOnly(false);
         InputGroup = new QGroupBox(centralWidget);
         InputGroup->setObjectName(QStringLiteral("InputGroup"));
         InputGroup->setGeometry(QRect(50, 110, 101, 261));
@@ -1773,11 +1779,11 @@ public:
         CPUGroup->setTitle(QApplication::translate("MainWindow", "CPU", 0));
         ACGroup->setTitle(QApplication::translate("MainWindow", "AC", 0));
         IRGroup->setTitle(QApplication::translate("MainWindow", "IR", 0));
-        PCGroup->setTitle(QApplication::translate("MainWindow", "PC", 0));
         pushButton->setText(QApplication::translate("MainWindow", "Run", 0));
         pushButton_2->setText(QApplication::translate("MainWindow", "Step", 0));
         clearCPUBut->setText(QApplication::translate("MainWindow", "Clear CPU", 0));
         clearAllBut->setText(QApplication::translate("MainWindow", "Clear ALL", 0));
+        PCGroup->setTitle(QApplication::translate("MainWindow", "PC", 0));
         InputGroup->setTitle(QApplication::translate("MainWindow", "Input Cards (IC)", 0));
         label->setText(QApplication::translate("MainWindow", "1", 0));
         label_2->setText(QApplication::translate("MainWindow", "2", 0));
