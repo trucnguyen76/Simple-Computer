@@ -49,14 +49,13 @@ public:
     QLineEdit *IR3;
     QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout;
-    QPushButton *pushButton;
-    QPushButton *pushButton_2;
+    QPushButton *runBtn;
+    QPushButton *stepBtn;
     QPushButton *clearCPUBut;
     QPushButton *clearAllBut;
     QGroupBox *PCGroup;
     QLineEdit *PC1;
     QLineEdit *PC2;
-    QLineEdit *PC3;
     QGroupBox *InputGroup;
     QLineEdit *IC1;
     QLineEdit *IC2;
@@ -78,6 +77,7 @@ public:
     QLabel *label_8;
     QLabel *label_9;
     QLabel *label_10;
+    QPushButton *resetInBtn;
     QPushButton *clearInBut;
     QGroupBox *OutputGroup;
     QLineEdit *OC1;
@@ -314,7 +314,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
-        MainWindow->resize(835, 698);
+        MainWindow->resize(835, 705);
         actionNew_File = new QAction(MainWindow);
         actionNew_File->setObjectName(QStringLiteral("actionNew_File"));
         actionSave_File = new QAction(MainWindow);
@@ -379,15 +379,15 @@ public:
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        pushButton = new QPushButton(layoutWidget);
-        pushButton->setObjectName(QStringLiteral("pushButton"));
+        runBtn = new QPushButton(layoutWidget);
+        runBtn->setObjectName(QStringLiteral("runBtn"));
 
-        horizontalLayout->addWidget(pushButton);
+        horizontalLayout->addWidget(runBtn);
 
-        pushButton_2 = new QPushButton(layoutWidget);
-        pushButton_2->setObjectName(QStringLiteral("pushButton_2"));
+        stepBtn = new QPushButton(layoutWidget);
+        stepBtn->setObjectName(QStringLiteral("stepBtn"));
 
-        horizontalLayout->addWidget(pushButton_2);
+        horizontalLayout->addWidget(stepBtn);
 
         clearCPUBut = new QPushButton(layoutWidget);
         clearCPUBut->setObjectName(QStringLiteral("clearCPUBut"));
@@ -401,7 +401,7 @@ public:
 
         PCGroup = new QGroupBox(CPUGroup);
         PCGroup->setObjectName(QStringLiteral("PCGroup"));
-        PCGroup->setGeometry(QRect(200, 10, 101, 51));
+        PCGroup->setGeometry(QRect(220, 10, 71, 51));
         PC1 = new QLineEdit(PCGroup);
         PC1->setObjectName(QStringLiteral("PC1"));
         PC1->setGeometry(QRect(10, 20, 25, 25));
@@ -412,14 +412,9 @@ public:
         PC2->setGeometry(QRect(35, 20, 25, 25));
         PC2->setInputMethodHints(Qt::ImhNone);
         PC2->setReadOnly(false);
-        PC3 = new QLineEdit(PCGroup);
-        PC3->setObjectName(QStringLiteral("PC3"));
-        PC3->setGeometry(QRect(60, 20, 25, 25));
-        PC3->setInputMethodHints(Qt::ImhNone);
-        PC3->setReadOnly(false);
         InputGroup = new QGroupBox(centralWidget);
         InputGroup->setObjectName(QStringLiteral("InputGroup"));
-        InputGroup->setGeometry(QRect(50, 110, 101, 261));
+        InputGroup->setGeometry(QRect(50, 90, 101, 291));
         IC1 = new QLineEdit(InputGroup);
         IC1->setObjectName(QStringLiteral("IC1"));
         IC1->setGeometry(QRect(30, 20, 50, 20));
@@ -492,17 +487,21 @@ public:
         label_10 = new QLabel(InputGroup);
         label_10->setObjectName(QStringLiteral("label_10"));
         label_10->setGeometry(QRect(10, 200, 15, 20));
-        clearInBut = new QPushButton(InputGroup);
-        clearInBut->setObjectName(QStringLiteral("clearInBut"));
-        clearInBut->setGeometry(QRect(20, 230, 71, 21));
+        resetInBtn = new QPushButton(InputGroup);
+        resetInBtn->setObjectName(QStringLiteral("resetInBtn"));
+        resetInBtn->setGeometry(QRect(20, 230, 71, 21));
         QFont font1;
         font1.setPointSize(8);
         font1.setBold(false);
         font1.setWeight(50);
+        resetInBtn->setFont(font1);
+        clearInBut = new QPushButton(InputGroup);
+        clearInBut->setObjectName(QStringLiteral("clearInBut"));
+        clearInBut->setGeometry(QRect(20, 260, 71, 21));
         clearInBut->setFont(font1);
         OutputGroup = new QGroupBox(centralWidget);
         OutputGroup->setObjectName(QStringLiteral("OutputGroup"));
-        OutputGroup->setGeometry(QRect(50, 380, 101, 261));
+        OutputGroup->setGeometry(QRect(50, 390, 101, 261));
         OC1 = new QLineEdit(OutputGroup);
         OC1->setObjectName(QStringLiteral("OC1"));
         OC1->setGeometry(QRect(30, 20, 50, 20));
@@ -642,7 +641,7 @@ public:
         mem4->setFont(font3);
         mem4->setInputMethodHints(Qt::ImhDigitsOnly|Qt::ImhFormattedNumbersOnly);
         mem4->setAlignment(Qt::AlignCenter);
-        mem4->setReadOnly(true);
+        mem4->setReadOnly(false);
         mem3 = new QLineEdit(memoryGroup);
         mem3->setObjectName(QStringLiteral("mem3"));
         mem3->setGeometry(QRect(50, 90, 50, 20));
@@ -1632,9 +1631,11 @@ public:
         QWidget::setTabOrder(IR2, IR3);
         QWidget::setTabOrder(IR3, PC1);
         QWidget::setTabOrder(PC1, PC2);
-        QWidget::setTabOrder(PC2, pushButton);
-        QWidget::setTabOrder(pushButton, pushButton_2);
-        QWidget::setTabOrder(pushButton_2, IC1);
+        QWidget::setTabOrder(PC2, runBtn);
+        QWidget::setTabOrder(runBtn, stepBtn);
+        QWidget::setTabOrder(stepBtn, clearCPUBut);
+        QWidget::setTabOrder(clearCPUBut, clearAllBut);
+        QWidget::setTabOrder(clearAllBut, IC1);
         QWidget::setTabOrder(IC1, IC2);
         QWidget::setTabOrder(IC2, IC3);
         QWidget::setTabOrder(IC3, IC4);
@@ -1644,7 +1645,8 @@ public:
         QWidget::setTabOrder(IC7, IC8);
         QWidget::setTabOrder(IC8, IC9);
         QWidget::setTabOrder(IC9, IC10);
-        QWidget::setTabOrder(IC10, OC1);
+        QWidget::setTabOrder(IC10, clearInBut);
+        QWidget::setTabOrder(clearInBut, OC1);
         QWidget::setTabOrder(OC1, OC2);
         QWidget::setTabOrder(OC2, OC3);
         QWidget::setTabOrder(OC3, OC4);
@@ -1654,7 +1656,8 @@ public:
         QWidget::setTabOrder(OC7, OC8);
         QWidget::setTabOrder(OC8, OC9);
         QWidget::setTabOrder(OC9, OC10);
-        QWidget::setTabOrder(OC10, mem0);
+        QWidget::setTabOrder(OC10, clearOutBut);
+        QWidget::setTabOrder(clearOutBut, mem0);
         QWidget::setTabOrder(mem0, mem1);
         QWidget::setTabOrder(mem1, mem2);
         QWidget::setTabOrder(mem2, mem3);
@@ -1754,6 +1757,7 @@ public:
         QWidget::setTabOrder(mem96, mem97);
         QWidget::setTabOrder(mem97, mem98);
         QWidget::setTabOrder(mem98, mem99);
+        QWidget::setTabOrder(mem99, clearMemBut);
 
         menuBar->addAction(menuFuile->menuAction());
         menuBar->addAction(menuHel->menuAction());
@@ -1779,8 +1783,8 @@ public:
         CPUGroup->setTitle(QApplication::translate("MainWindow", "CPU", 0));
         ACGroup->setTitle(QApplication::translate("MainWindow", "AC", 0));
         IRGroup->setTitle(QApplication::translate("MainWindow", "IR", 0));
-        pushButton->setText(QApplication::translate("MainWindow", "Run", 0));
-        pushButton_2->setText(QApplication::translate("MainWindow", "Step", 0));
+        runBtn->setText(QApplication::translate("MainWindow", "Run", 0));
+        stepBtn->setText(QApplication::translate("MainWindow", "Step", 0));
         clearCPUBut->setText(QApplication::translate("MainWindow", "Clear CPU", 0));
         clearAllBut->setText(QApplication::translate("MainWindow", "Clear ALL", 0));
         PCGroup->setTitle(QApplication::translate("MainWindow", "PC", 0));
@@ -1795,6 +1799,7 @@ public:
         label_8->setText(QApplication::translate("MainWindow", "8", 0));
         label_9->setText(QApplication::translate("MainWindow", "9", 0));
         label_10->setText(QApplication::translate("MainWindow", "10", 0));
+        resetInBtn->setText(QApplication::translate("MainWindow", "Reset Input", 0));
         clearInBut->setText(QApplication::translate("MainWindow", "Clear Input", 0));
         OutputGroup->setTitle(QApplication::translate("MainWindow", "Output Cards (OC)", 0));
         label_11->setText(QApplication::translate("MainWindow", "1", 0));

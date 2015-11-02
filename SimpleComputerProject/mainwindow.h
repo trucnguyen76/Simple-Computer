@@ -36,7 +36,8 @@ public:
     void updateACDisplay();
     void updatePCDisplay();
     void updateIRDisplay();
-    void step(int command);
+    bool step(int command);
+    void run();
 
 private:
     Ui::MainWindow *ui;
@@ -53,7 +54,14 @@ private slots:
     void editMemory();
     void editInput();
 
-    void on_pushButton_2_clicked();
+    void on_runBtn_clicked();
+    bool on_stepBtn_clicked();
+    void on_clearCPUBut_clicked();
+    void on_clearInBut_clicked();
+    void on_clearOutBut_clicked();
+    void on_clearMemBut_clicked();
+    void on_clearAllBut_clicked();
+    void on_resetInBtn_clicked();
 };
 
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>835</width>
-    <height>698</height>
+    <height>705</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -175,14 +175,14 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <widget class="QPushButton" name="pushButton">
+       <widget class="QPushButton" name="runBtn">
         <property name="text">
          <string>Run</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_2">
+       <widget class="QPushButton" name="stepBtn">
         <property name="text">
          <string>Step</string>
         </property>
@@ -207,9 +207,9 @@
     <widget class="QGroupBox" name="PCGroup">
      <property name="geometry">
       <rect>
-       <x>200</x>
+       <x>220</x>
        <y>10</y>
-       <width>101</width>
+       <width>71</width>
        <height>51</height>
       </rect>
      </property>
@@ -248,31 +248,15 @@
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QLineEdit" name="PC3">
-      <property name="geometry">
-       <rect>
-        <x>60</x>
-        <y>20</y>
-        <width>25</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="inputMethodHints">
-       <set>Qt::ImhNone</set>
-      </property>
-      <property name="readOnly">
-       <bool>false</bool>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QGroupBox" name="InputGroup">
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>110</y>
+      <y>90</y>
       <width>101</width>
-      <height>261</height>
+      <height>291</height>
      </rect>
     </property>
     <property name="title">
@@ -558,11 +542,31 @@
       <string>10</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="clearInBut">
+    <widget class="QPushButton" name="resetInBtn">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>230</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+       <weight>50</weight>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Reset Input</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="clearInBut">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>260</y>
        <width>71</width>
        <height>21</height>
       </rect>
@@ -583,7 +587,7 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>380</y>
+      <y>390</y>
       <width>101</width>
       <height>261</height>
      </rect>
@@ -1108,7 +1112,7 @@
       <set>Qt::AlignCenter</set>
      </property>
      <property name="readOnly">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QLineEdit" name="mem3">
@@ -5369,8 +5373,10 @@ PC - Prgoram Counter</string>
   <tabstop>IR3</tabstop>
   <tabstop>PC1</tabstop>
   <tabstop>PC2</tabstop>
-  <tabstop>pushButton</tabstop>
-  <tabstop>pushButton_2</tabstop>
+  <tabstop>runBtn</tabstop>
+  <tabstop>stepBtn</tabstop>
+  <tabstop>clearCPUBut</tabstop>
+  <tabstop>clearAllBut</tabstop>
   <tabstop>IC1</tabstop>
   <tabstop>IC2</tabstop>
   <tabstop>IC3</tabstop>
@@ -5381,6 +5387,7 @@ PC - Prgoram Counter</string>
   <tabstop>IC8</tabstop>
   <tabstop>IC9</tabstop>
   <tabstop>IC10</tabstop>
+  <tabstop>clearInBut</tabstop>
   <tabstop>OC1</tabstop>
   <tabstop>OC2</tabstop>
   <tabstop>OC3</tabstop>
@@ -5391,6 +5398,7 @@ PC - Prgoram Counter</string>
   <tabstop>OC8</tabstop>
   <tabstop>OC9</tabstop>
   <tabstop>OC10</tabstop>
+  <tabstop>clearOutBut</tabstop>
   <tabstop>mem0</tabstop>
   <tabstop>mem1</tabstop>
   <tabstop>mem2</tabstop>
@@ -5491,6 +5499,7 @@ PC - Prgoram Counter</string>
   <tabstop>mem97</tabstop>
   <tabstop>mem98</tabstop>
   <tabstop>mem99</tabstop>
+  <tabstop>clearMemBut</tabstop>
  </tabstops>
  <resources/>
  <connections/>
