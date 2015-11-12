@@ -6,6 +6,8 @@
 #include <QLineEdit>
 #include <QDebug>
 #include <QMessageBox>
+#include <QFile>
+#include <QTextStream>
 
 namespace Ui {
 class MainWindow;
@@ -49,6 +51,8 @@ private:
     int accumulator;
     int iRegister;
     int pCounter;
+    bool okClicked;
+    bool cancelClicked;
 
 private slots:
     void editMemory();
@@ -62,6 +66,10 @@ private slots:
     void on_clearMemBut_clicked();
     void on_clearAllBut_clicked();
     void on_resetInBtn_clicked();
+    void saveFile();
+    void loadFile();
+    void on_okButton_clicked();
+    void on_cancelButton_clicked();
 };
 
 

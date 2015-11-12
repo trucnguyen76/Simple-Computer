@@ -8,6 +8,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     setUpMemory();
     setUpIO();
+    setWindowTitle("Simple Computer");
+    ui->saveLoadWidget->hide();
+
 
     foreach(QLineEdit* memoryCell, memoryMap)
     {
@@ -19,8 +22,17 @@ MainWindow::MainWindow(QWidget *parent) :
         connect(inputCell, SIGNAL(editingFinished()), this, SLOT(editInput()));
     }
 
+    connect(ui->actionSave_File, SIGNAL(triggered()), this, SLOT(saveFile()));
+    connect(ui->actionLoad_File, SIGNAL(triggered()), this, SLOT(loadFile()));
+
+
     currentInputKey = 0;
     currentOutputKey = 0;
+    accumulator = 0;
+    pCounter = 0;
+    iRegister = 0;
+    okClicked = false;
+    cancelClicked = false;
 
 }
 
@@ -421,4 +433,124 @@ void MainWindow::on_clearAllBut_clicked()
 void MainWindow::on_resetInBtn_clicked()
 {
     currentInputKey = 0;
+}
+
+void MainWindow::saveFile()
+{
+    ui->saveLoadWidget->show();
+
+    if(okClicked && ui->fileNameInput->displayText().size() > 0)
+    {
+        QString fileName = ui->fileNameInput->displayText() + ".txt";
+        QFile file(fileName);
+        file.open(QIODevice::WriteOnly|QIODevice::Text);
+        QTextStream out(&file);
+
+        //Write memory cells
+        foreach(QLineEdit* memoryCell, memoryMap)
+        {
+            out << memoryCell->displayText();
+            out << endl;
+        }
+
+        //Write Input cells
+        foreach(QLineEdit* inputCell, inputMap)
+        {
+            out << inputCell->displayText();
+            out << endl;
+        }
+
+        //Write Output cells
+        foreach(QLineEdit* outputCell, outputMap)
+        {
+            out << outputCell->displayText();
+            out << endl;
+        }
+
+        out << accumulator << endl;
+        out << pCounter << endl;
+        out << iRegister << endl;
+
+        out.flush();
+        file.close();
+        ui->saveLoadWidget->hide();
+    }
+    else if(okClicked)
+    {
+        QMessageBox::information(this,"Error", "Please enter a valid file name");
+    }
+    else if(cancelClicked)
+    {
+        ui->saveLoadWidget->hide();
+    }
+    else
+    {
+        qDebug() << "Shit";
+    }
+}
+
+void MainWindow::loadFile()
+{
+    if(okClicked && ui->fileNameInput->displayText().size() > 0)
+    {
+        QString fileName = ui->fileNameInput->displayText() + ".txt";
+        QFile file(fileName);
+        file.open(QIODevice::ReadOnly|QIODevice::Text);
+        QTextStream in(&file);
+
+        //Write memory cells
+        foreach(QLineEdit* memoryCell, memoryMap)
+        {
+            memoryCell->setText(in.readLine());
+            in << endl;
+        }
+
+        //Write Input cells
+        foreach(QLineEdit* inputCell, inputMap)
+        {
+            inputCell->setText(in.readLine());
+            in << endl;
+        }
+
+        //Write Output cells
+        foreach(QLineEdit* outputCell, outputMap)
+        {
+            outputCell->setText(in.readLine());
+            in << endl;
+        }
+
+        accumulator = in.readLine().toInt();
+        pCounter = in.readLine().toInt();
+        iRegister = in.readLine().toInt();
+
+        updateIRDisplay();
+        updatePCDisplay();
+        updateACDisplay();
+
+        file.close();
+        ui->saveLoadWidget->hide();
+    }
+    else if(okClicked)
+    {
+        QMessageBox::information(this,"Error", "Please enter a valid file name");
+    }
+    else if(cancelClicked)
+    {
+        ui->saveLoadWidget->hide();
+    }
+    else
+    {
+        qDebug() << "Shit";
+    }
+
+}
+
+void MainWindow::on_okButton_clicked()
+{
+    okClicked = true;
+}
+
+void MainWindow::on_cancelButton_clicked()
+{
+    cancelClicked = true;
 }
