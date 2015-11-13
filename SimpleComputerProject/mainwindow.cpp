@@ -5,6 +5,14 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    currentInputKey = 0;
+    currentOutputKey = 0;
+    accumulator = 0;
+    pCounter = 0;
+    iRegister = 0;
+    okClicked = false;
+    cancelClicked = false;
+
     ui->setupUi(this);
     setUpMemory();
     setUpIO();
@@ -24,16 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->actionSave_File, SIGNAL(triggered()), this, SLOT(saveFile()));
     connect(ui->actionLoad_File, SIGNAL(triggered()), this, SLOT(loadFile()));
-
-
-    currentInputKey = 0;
-    currentOutputKey = 0;
-    accumulator = 0;
-    pCounter = 0;
-    iRegister = 0;
-    okClicked = false;
-    cancelClicked = false;
-
+    ui->saveLoadWidget->move(270, 150);
 }
 
 MainWindow::~MainWindow()
@@ -149,6 +148,8 @@ void MainWindow::editInput()
 
 bool MainWindow::step(int command)
 {
+    qDebug() << "Step";
+    qDebug() << command;
     int code;
     int memory;
     bool cont;
@@ -178,38 +179,72 @@ bool MainWindow::step(int command)
 
             break;
         case OUT:
-            if(currentOutputKey <= 9)
+            if(memoryMap[memory]->displayText().size() > 0)
             {
-                outputMap[currentOutputKey]->setText(memoryMap[memory]->displayText());
-                currentOutputKey++;
+                if(currentOutputKey <= 9)
+                {
+                    outputMap[currentOutputKey]->setText(memoryMap[memory]->displayText());
+                    currentOutputKey++;
+                    pCounter++;
+                    cont = true;
+                }
+                else
+                {
+                    cont = false;
+                }
+            }
+            else
+            {
+                QMessageBox::information(this, "Error", "Reach empty memory card");
+                cont = false;
+            }
+
+
+            break;
+        case ADD:
+            if(memoryMap[memory]->displayText().size() > 0)
+            {
+                accumulator += memoryMap[memory]->displayText().toInt();
+                updateACDisplay();
                 pCounter++;
                 cont = true;
             }
             else
             {
+                QMessageBox::information(this, "Error", "Reach empty memory card");
                 cont = false;
             }
 
             break;
-        case ADD:
-            accumulator += memoryMap[memory]->displayText().toInt();
-            updateACDisplay();
-            pCounter++;
-            cont = true;
-
-            break;
-        case SUB:
-            accumulator -= memoryMap[memory]->displayText().toInt();
-            updateACDisplay();
-            pCounter++;
-            cont = true;
+        case SUB:            
+            if(memoryMap[memory]->displayText().size() > 0)
+            {
+                accumulator -= memoryMap[memory]->displayText().toInt();
+                updateACDisplay();
+                pCounter++;
+                cont = true;
+            }
+            else
+            {
+                QMessageBox::information(this, "Error", "Reach empty memory card");
+                cont = false;
+            }
 
             break;
         case LDA:
-            accumulator = memoryMap[memory]->displayText().toInt();
-            pCounter++;
-            updateACDisplay();
-            cont = true;
+            if(memoryMap[memory]->displayText().size() > 0)
+            {
+                accumulator = memoryMap[memory]->displayText().toInt();
+                pCounter++;
+                updateACDisplay();
+                cont = true;
+            }
+            else
+            {
+                QMessageBox::information(this, "Error", "Reach empty memory card");
+                cont = false;
+            }
+
 
             break;
         case STA:
@@ -242,38 +277,46 @@ bool MainWindow::step(int command)
                 }
             }
 
-
             memoryMap[memory]->setText(str);
             pCounter++;
 
             cont = true;
             break;
         case JMP:
-            str = QString::number(pCounter + 1 );
-            if(str.size() == 1)
+            if(memoryMap[memory]->displayText().size() > 0)
             {
-                str = "00" + str;
-            }
-            else if(str.size() == 2)
-            {
-                str = "0" + str;
-            }
-            memoryMap[99]->setText(str);
-            pCounter = memory;
+                str = QString::number(pCounter + 1 );
+                if(str.size() == 1)
+                {
+                    str = "00" + str;
+                }
+                else if(str.size() == 2)
+                {
+                    str = "0" + str;
+                }
+                memoryMap[99]->setText(str);
+                pCounter = memory;
 
-            cont = true;
+                cont = true;
+            }
+            else
+            {
+                QMessageBox::information(this, "Error", "Reach empty memory card");
+                cont = false;
+            }
+
             break;
         case TAC:
             if(accumulator < 0)
             {
-                pCounter = memory;
+                 pCounter = memory;
             }
             else
             {
-                pCounter++;
-            }
-            cont = true;
 
+                pCounter++;
+           }
+            cont = true;
             break;
         case SHF:
             int x, y;
@@ -309,8 +352,22 @@ bool MainWindow::step(int command)
 
     }
 
+    if(cont)
+    {
+        if(memoryMap[pCounter]->displayText().size() <= 0)
+        {
+            QMessageBox::information(this, "Error", "Reach empty memory card");
+            cont = false;
+        }
+    }
+
+    if(cont)
+    {
+        updatePCDisplay();
+    }
+
     updateIRDisplay();
-    updatePCDisplay();
+
 
     return cont;
 }
@@ -437,120 +494,113 @@ void MainWindow::on_resetInBtn_clicked()
 
 void MainWindow::saveFile()
 {
+    ui->saveloadLabel->setText("Save File");
     ui->saveLoadWidget->show();
 
-    if(okClicked && ui->fileNameInput->displayText().size() > 0)
-    {
-        QString fileName = ui->fileNameInput->displayText() + ".txt";
-        QFile file(fileName);
-        file.open(QIODevice::WriteOnly|QIODevice::Text);
-        QTextStream out(&file);
-
-        //Write memory cells
-        foreach(QLineEdit* memoryCell, memoryMap)
-        {
-            out << memoryCell->displayText();
-            out << endl;
-        }
-
-        //Write Input cells
-        foreach(QLineEdit* inputCell, inputMap)
-        {
-            out << inputCell->displayText();
-            out << endl;
-        }
-
-        //Write Output cells
-        foreach(QLineEdit* outputCell, outputMap)
-        {
-            out << outputCell->displayText();
-            out << endl;
-        }
-
-        out << accumulator << endl;
-        out << pCounter << endl;
-        out << iRegister << endl;
-
-        out.flush();
-        file.close();
-        ui->saveLoadWidget->hide();
-    }
-    else if(okClicked)
-    {
-        QMessageBox::information(this,"Error", "Please enter a valid file name");
-    }
-    else if(cancelClicked)
-    {
-        ui->saveLoadWidget->hide();
-    }
-    else
-    {
-        qDebug() << "Shit";
-    }
 }
 
 void MainWindow::loadFile()
 {
-    if(okClicked && ui->fileNameInput->displayText().size() > 0)
-    {
-        QString fileName = ui->fileNameInput->displayText() + ".txt";
-        QFile file(fileName);
-        file.open(QIODevice::ReadOnly|QIODevice::Text);
-        QTextStream in(&file);
-
-        //Write memory cells
-        foreach(QLineEdit* memoryCell, memoryMap)
-        {
-            memoryCell->setText(in.readLine());
-            in << endl;
-        }
-
-        //Write Input cells
-        foreach(QLineEdit* inputCell, inputMap)
-        {
-            inputCell->setText(in.readLine());
-            in << endl;
-        }
-
-        //Write Output cells
-        foreach(QLineEdit* outputCell, outputMap)
-        {
-            outputCell->setText(in.readLine());
-            in << endl;
-        }
-
-        accumulator = in.readLine().toInt();
-        pCounter = in.readLine().toInt();
-        iRegister = in.readLine().toInt();
-
-        updateIRDisplay();
-        updatePCDisplay();
-        updateACDisplay();
-
-        file.close();
-        ui->saveLoadWidget->hide();
-    }
-    else if(okClicked)
-    {
-        QMessageBox::information(this,"Error", "Please enter a valid file name");
-    }
-    else if(cancelClicked)
-    {
-        ui->saveLoadWidget->hide();
-    }
-    else
-    {
-        qDebug() << "Shit";
-    }
-
+    ui->saveloadLabel->setText("Load File");
+    ui->saveLoadWidget->show();
 }
 
 void MainWindow::on_okButton_clicked()
 {
-    okClicked = true;
+    if(ui->fileNameInput->displayText().size() > 0)
+    {
+        if(ui->saveloadLabel->text() == "Load File")
+        {
+            QString fileName = ui->fileNameInput->displayText() + ".txt";
+            QFile file(fileName);
+            file.open(QIODevice::ReadOnly|QIODevice::Text);
+            QTextStream in(&file);
+
+            //Read memory cells
+            foreach(QLineEdit* memoryCell, memoryMap)
+            {
+                memoryCell->setText(in.readLine());
+                in << endl;
+            }
+
+            //Read Input cells
+            foreach(QLineEdit* inputCell, inputMap)
+            {
+                inputCell->setText(in.readLine());
+                in << endl;
+            }
+
+            //Read Output cells
+            foreach(QLineEdit* outputCell, outputMap)
+            {
+                outputCell->setText(in.readLine());
+                in << endl;
+            }
+
+            accumulator = in.readLine().toInt();
+            pCounter = in.readLine().toInt();
+            iRegister = in.readLine().toInt();
+
+            updateIRDisplay();
+            updatePCDisplay();
+            updateACDisplay();
+
+            file.close();
+            ui->saveLoadWidget->hide();
+        }
+        else if(ui->saveloadLabel->text() == "Save File")
+        {
+            int pc;
+            QString fileName = ui->fileNameInput->displayText() + ".txt";
+            QFile file(fileName);
+            file.open(QIODevice::WriteOnly|QIODevice::Text);
+            QTextStream out(&file);
+
+            //Write memory cells
+            foreach(QLineEdit* memoryCell, memoryMap)
+            {
+                out << memoryCell->displayText();
+                out << endl;
+            }
+
+            //Write Input cells
+            foreach(QLineEdit* inputCell, inputMap)
+            {
+                out << inputCell->displayText();
+                out << endl;
+            }
+
+            //Write Output cells
+            foreach(QLineEdit* outputCell, outputMap)
+            {
+                out << outputCell->displayText();
+                out << endl;
+            }
+
+            pc = ui->PC1->displayText().toInt() * 10 +
+                 ui->PC2->displayText().toInt();
+
+            out << accumulator << endl;
+            out << pc << endl;
+            out << iRegister << endl;
+
+            out.flush();
+            file.close();
+            ui->saveLoadWidget->hide();
+        }
+        else
+        {
+            qDebug() << "Oh shit!";
+        }
+    }
+    else
+    {
+        QMessageBox::information(this,"Error", "Please enter a valid file name");
+    }
+
 }
 
 void MainWindow::on_cancelButton_clicked()
 {
-    cancelClicked = true;
+        ui->saveLoadWidget->hide();
 }

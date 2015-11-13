@@ -228,6 +228,9 @@
       <property name="inputMethodHints">
        <set>Qt::ImhNone</set>
       </property>
+      <property name="text">
+       <string>0</string>
+      </property>
       <property name="readOnly">
        <bool>false</bool>
       </property>
@@ -243,6 +246,9 @@
       </property>
       <property name="inputMethodHints">
        <set>Qt::ImhNone</set>
+      </property>
+      <property name="text">
+       <string>0</string>
       </property>
       <property name="readOnly">
        <bool>false</bool>
@@ -582,29 +588,6 @@
       <string>Clear Input</string>
      </property>
     </widget>
-    <zorder>IC1</zorder>
-    <zorder>IC2</zorder>
-    <zorder>IC3</zorder>
-    <zorder>IC4</zorder>
-    <zorder>IC5</zorder>
-    <zorder>IC6</zorder>
-    <zorder>IC7</zorder>
-    <zorder>IC8</zorder>
-    <zorder>IC9</zorder>
-    <zorder>IC10</zorder>
-    <zorder>label</zorder>
-    <zorder>label_2</zorder>
-    <zorder>label_3</zorder>
-    <zorder>label_4</zorder>
-    <zorder>label_5</zorder>
-    <zorder>label_6</zorder>
-    <zorder>label_7</zorder>
-    <zorder>label_8</zorder>
-    <zorder>label_9</zorder>
-    <zorder>label_10</zorder>
-    <zorder>resetInBtn</zorder>
-    <zorder>clearInBut</zorder>
-    <zorder>saveLoadWidget</zorder>
    </widget>
    <widget class="QGroupBox" name="OutputGroup">
     <property name="geometry">
@@ -5580,6 +5563,19 @@ PC - Prgoram Counter</string>
      </property>
      <property name="text">
       <string>File Name:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="saveloadLabel">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>46</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>TextLabel</string>
      </property>
     </widget>
    </widget>

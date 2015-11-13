@@ -310,6 +310,7 @@ public:
     QPushButton *cancelButton;
     QLineEdit *fileNameInput;
     QLabel *label_21;
+    QLabel *saveloadLabel;
     QMenuBar *menuBar;
     QMenu *fileMenu;
     QMenu *helpMenu;
@@ -507,28 +508,6 @@ public:
         clearInBut->setObjectName(QStringLiteral("clearInBut"));
         clearInBut->setGeometry(QRect(20, 260, 71, 21));
         clearInBut->setFont(font1);
-        IC1->raise();
-        IC2->raise();
-        IC3->raise();
-        IC4->raise();
-        IC5->raise();
-        IC6->raise();
-        IC7->raise();
-        IC8->raise();
-        IC9->raise();
-        IC10->raise();
-        label->raise();
-        label_2->raise();
-        label_3->raise();
-        label_4->raise();
-        label_5->raise();
-        label_6->raise();
-        label_7->raise();
-        label_8->raise();
-        label_9->raise();
-        label_10->raise();
-        resetInBtn->raise();
-        clearInBut->raise();
         OutputGroup = new QGroupBox(centralWidget);
         OutputGroup->setObjectName(QStringLiteral("OutputGroup"));
         OutputGroup->setGeometry(QRect(50, 390, 101, 261));
@@ -1854,6 +1833,9 @@ public:
         label_21 = new QLabel(saveLoadWidget);
         label_21->setObjectName(QStringLiteral("label_21"));
         label_21->setGeometry(QRect(10, 30, 61, 16));
+        saveloadLabel = new QLabel(saveLoadWidget);
+        saveloadLabel->setObjectName(QStringLiteral("saveloadLabel"));
+        saveloadLabel->setGeometry(QRect(20, 10, 46, 13));
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -2035,6 +2017,8 @@ public:
         clearCPUBut->setText(QApplication::translate("MainWindow", "Clear CPU", 0));
         clearAllBut->setText(QApplication::translate("MainWindow", "Clear ALL", 0));
         PCGroup->setTitle(QApplication::translate("MainWindow", "PC", 0));
+        PC1->setText(QApplication::translate("MainWindow", "0", 0));
+        PC2->setText(QApplication::translate("MainWindow", "0", 0));
         InputGroup->setTitle(QApplication::translate("MainWindow", "Input Cards (IC)", 0));
         label->setText(QApplication::translate("MainWindow", "1", 0));
         label_2->setText(QApplication::translate("MainWindow", "2", 0));
@@ -2171,6 +2155,7 @@ public:
         okButton->setText(QApplication::translate("MainWindow", "OK", 0));
         cancelButton->setText(QApplication::translate("MainWindow", "Cancel", 0));
         label_21->setText(QApplication::translate("MainWindow", "File Name:", 0));
+        saveloadLabel->setText(QApplication::translate("MainWindow", "TextLabel", 0));
         fileMenu->setTitle(QApplication::translate("MainWindow", "File", 0));
         helpMenu->setTitle(QApplication::translate("MainWindow", "Help", 0));
     } // retranslateUi
